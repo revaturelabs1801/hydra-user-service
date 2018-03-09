@@ -1,4 +1,4 @@
-package com.bam.controller;
+package com.revature.demo.controllers;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import com.revature.demo.service.BamUserService;
 
 
 @RestController
-@RequestMapping(value = "/api/v1/Users/")
+@RequestMapping(value = "/api/v2/Users/")
 public class UserController {
 	
 	private static final String USERID = "userId";
