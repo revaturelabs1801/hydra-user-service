@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.revature.demo.beans.BamUser;
 import com.revature.demo.repository.BamUserRepository;
 
 
@@ -45,7 +46,7 @@ public class BamUserService {
 	}
 	
 	// return a specific user by their first and last name
-	public List<BamUser> getByFNameAndLName(String f, String L) {
+	public List<BamUser> getByFNameAndLName(String f, String l) {
 		return bamUserRepository.findByFNameAndLName(f, l);
 	}
 }
