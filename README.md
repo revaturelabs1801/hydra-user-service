@@ -5,3 +5,4 @@ MicroService for a user.
 		-This service is then used for creating and implementing business logic.
 	-The repository is then used for connecting to the repository through JPA methods.
 		-These methods mostly include finding users, adding new users, and updating previous users.
+		-To use JDBC, put the files in m2Setup into your .m2/repository/com/oracle/ojdbc7/12.1.0
