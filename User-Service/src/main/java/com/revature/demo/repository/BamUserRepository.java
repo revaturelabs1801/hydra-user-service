@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.revature.demo.beans.BamUser;
+
 /*
  * Author: Devin Dellamano
  * Purpose: Methods used to talk to the repository
  */
 @Repository
-public class BamUserRepository extends JpaRepository<BamUser, Integer> {
+public interface BamUserRepository extends JpaRepository<BamUser, Integer> {
 	// grab a single user by id
 	public BamUser findByUserId(int id);
 	// grab a single user by their email
