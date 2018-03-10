@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.demo.beans.BamUser;
+import com.revature.demo.beans.Role;
 import com.revature.demo.exception.CustomException;
 import com.revature.demo.service.BamUserService;
+import com.revature.demo.service.RoleService;
 
 
 @RestController
@@ -24,6 +26,9 @@ public class UserController {
 
 	@Autowired
 	BamUserService userService;
+	
+	@Autowired
+	RoleService roleService;
 
 	@RequestMapping(value = "All", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -53,7 +58,8 @@ public class UserController {
 	@RequestMapping(value="Register", method=RequestMethod.POST, produces="application/json")
 	public void addUser(@RequestBody BamUser currentUser) throws CustomException {
 		if(userService.findUserByEmail(currentUser.getEmail())==null){
-			currentUser.setRole(1);
+			Role role = roleService.findByRoleId(1);
+			currentUser.setRole(role);
 			String password = currentUser.getPwd();
 			String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 			currentUser.setPwd(hashed);
