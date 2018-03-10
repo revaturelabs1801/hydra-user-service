@@ -53,10 +53,10 @@ public class BamUser {
 	@JoinColumn(name = "ROLE_ID", referencedColumnName = "Role_Id")
 	private Role role;
 	
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "BATCH_ID", referencedColumnName = "BATCH_ID")
+	//@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	//@JoinColumn(name = "BATCH_ID", referencedColumnName = "BATCH_ID")
 	//@Autowired // Batch ID should only be used for associates. DO NOT use this
-	private Batch batch; // field to assign a batch to a trainer. It should be
+	private int batch; // field to assign a batch to a trainer. It should be
 							// null for
 							// trainers and admins. A trainer is assigned in the
 							// Batches table.
@@ -84,7 +84,7 @@ public class BamUser {
 	}
 
 	public BamUser(String fName, String mName, String lName, String email, String pwd, Role role,
-			Batch batch, String phone, String phone2, String skype, String pwd2) {//NOSONAR
+			int batch, String phone, String phone2, String skype, String pwd2) {//NOSONAR
 		super();
 		this.fName = fName;
 		this.mName = mName;
@@ -100,7 +100,7 @@ public class BamUser {
 	}
 
 	public BamUser(int userId, String fName, String mName, String lName, String email, String pwd, Role role,
-			Batch batch, String phone, String phone2, String skype, String pwd2) {//NOSONAR
+			int batch, String phone, String phone2, String skype, String pwd2) {//NOSONAR
 		super();
 		this.fName = fName;
 		this.mName = mName;
@@ -117,7 +117,7 @@ public class BamUser {
 	}
 
 	public BamUser(int userId, String fName, String mName, String lName, String email, String pwd, Role role,
-			Batch batch, String phone, String phone2, String skype, String pwd2, Integer AssignForceID) {//NOSONAR
+			int batch, String phone, String phone2, String skype, String pwd2, Integer AssignForceID) {//NOSONAR
 		super();
 		this.userId = userId;
 		this.fName = fName;
@@ -230,11 +230,11 @@ public class BamUser {
 		this.assignForceID = assignForceID;
 	}
 
-	public Batch getBatch() {
+	public int getBatch() {
 		return batch;
 	}
 
-	public void setBatch(Batch batch) {
+	public void setBatch(int batch) {
 		this.batch = batch;
 	}
 
