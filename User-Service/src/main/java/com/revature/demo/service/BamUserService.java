@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.demo.beans.BamUser;
+import com.revature.demo.pojo.Batch;
 import com.revature.demo.repository.BamUserRepository;
 
 
@@ -48,5 +49,23 @@ public class BamUserService {
 	// return a specific user by their first and last name
 	public List<BamUser> getByFNameAndLName(String f, String l) {
 		return bamUserRepository.findByFNameAndLName(f, l);
+	}
+	
+	// return the users located in a batch based off batch id
+	public List<BamUser> findUsersInBatch(Batch batch) {
+		return bamUserRepository.findByBatch(batch);
+	}
+	
+	// return the users not in any batches (a.k.a. the batch id is null)
+	public List<BamUser> findUsersNotInBatch() {
+		List<BamUser> users = bamUserRepository.findByBatch(null);
+		for (int i = 0; i < users.size(); i++) {
+			// remove a user if their role is not an associate
+			if (users.get(i).getRole() != 1) {
+				users.remove(i);
+				i--;
+			}
+		}
+		return users;
 	}
 }

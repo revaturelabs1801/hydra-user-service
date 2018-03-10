@@ -13,8 +13,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.engine.jdbc.batch.spi.Batch;
 import org.springframework.stereotype.Component;
+
+import com.revature.demo.pojo.Batch;
 
 
 @Entity
@@ -67,6 +68,10 @@ public class BamUser {
 
 	@Column(name = "Skype_ID")
 	private String skype;
+	
+	@Column(name = "Password_Bak") // This is a backup password that will be
+									// used when
+	private String pwd2;// the user needs to reset their password.
 
 	@Column(name="AssignForce_ID")
 	private Integer assignForceID;
@@ -77,7 +82,7 @@ public class BamUser {
 	}
 
 	public BamUser(String fName, String mName, String lName, String email, String pwd, int role,
-			String phone, String phone2, String skype) {//NOSONAR
+			Batch batch, String phone, String phone2, String skype, String pwd2) {//NOSONAR
 		super();
 		this.fName = fName;
 		this.mName = mName;
@@ -85,13 +90,15 @@ public class BamUser {
 		this.email = email;
 		this.pwd = pwd;
 		this.role = role;
+		this.batch = batch;
 		this.phone = phone;
 		this.phone2 = phone2;
 		this.skype = skype;
+		this.pwd2 = pwd2;
 	}
 
 	public BamUser(int userId, String fName, String mName, String lName, String email, String pwd, int role,
-			String phone, String phone2, String skype) {//NOSONAR
+			Batch batch, String phone, String phone2, String skype, String pwd2) {//NOSONAR
 		super();
 		this.fName = fName;
 		this.mName = mName;
@@ -100,13 +107,15 @@ public class BamUser {
 		this.userId = userId;
 		this.pwd = pwd;
 		this.role = role;
+		this.batch = batch;
 		this.phone = phone;
 		this.phone2 = phone2;
 		this.skype = skype;
+		this.pwd2 = pwd2;
 	}
 
 	public BamUser(int userId, String fName, String mName, String lName, String email, String pwd, int role,
-			String phone, String phone2, String skype, Integer AssignForceID) {//NOSONAR
+			Batch batch, String phone, String phone2, String skype, String pwd2, Integer AssignForceID) {//NOSONAR
 		super();
 		this.userId = userId;
 		this.fName = fName;
@@ -115,10 +124,12 @@ public class BamUser {
 		this.email = email;
 		this.pwd = pwd;
 		this.role = role;
+		this.batch = batch;
 		this.phone = phone;
 		this.phone2 = phone2;
 		this.skype = skype;
-		assignForceID = AssignForceID;
+		this.pwd2 = pwd2;
+		this.assignForceID = AssignForceID;
 	}
 
 	public int getUserId() {
@@ -201,6 +212,14 @@ public class BamUser {
 		this.skype = skype;
 	}
 
+	public String getPwd2() {
+		return pwd2;
+	}
+
+	public void setPwd2(String pwd2) {
+		this.pwd2 = pwd2;
+	}
+
 	public Integer getAssignForceID() {
 		return assignForceID;
 	}
@@ -209,11 +228,19 @@ public class BamUser {
 		this.assignForceID = assignForceID;
 	}
 
+	public Batch getBatch() {
+		return batch;
+	}
+
+	public void setBatch(Batch batch) {
+		this.batch = batch;
+	}
+
 	@Override
 	public String toString() {
 		return "BamUser [userId=" + userId + ", fName=" + fName + ", mName=" + mName + ", lName=" + lName + ", email="
-				+ email + ", pwd=" + pwd + ", role=" + role + ", phone=" + phone + ", phone2="
-				+ phone2 + ", skype=" + skype + "]";
+				+ email + ", pwd=" + pwd + ", role=" + role + ", batch=" + batch + ", phone=" + phone + ", phone2="
+				+ phone2 + ", skype=" + skype + ", pwd2=" + pwd2 + ", assignForceID=" + assignForceID + "]";
 	}
 
 }
