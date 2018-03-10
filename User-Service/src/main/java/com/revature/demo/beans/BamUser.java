@@ -1,14 +1,19 @@
 package com.revature.demo.beans;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.engine.jdbc.batch.spi.Batch;
 import org.springframework.stereotype.Component;
 
 
@@ -44,6 +49,14 @@ public class BamUser {
 	
 	@Column(name = "Role") // Role 1 is for associates // Role 2 is for trainers & QC
 	private int role; // Role 3 is for admins
+	
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "BATCH_ID", referencedColumnName = "BATCH_ID")
+	//@Autowired // Batch ID should only be used for associates. DO NOT use this
+	private Batch batch; // field to assign a batch to a trainer. It should be
+							// null for
+							// trainers and admins. A trainer is assigned in the
+							// Batches table.
 
 	@Column(name = "Main_Phone")
 	@NotNull(message = "Primary phone cannot be empty")
