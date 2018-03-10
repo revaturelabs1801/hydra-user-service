@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -48,8 +49,9 @@ public class BamUser {
 	@NotNull(message="Password cannot be empty")
 	private String pwd;
 	
-	@Column(name = "Role") // Role 1 is for associates // Role 2 is for trainers & QC
-	private int role; // Role 3 is for admins
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "ROLE_ID", referencedColumnName = "Role_Id")
+	private Role role;
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "BATCH_ID", referencedColumnName = "BATCH_ID")
@@ -81,7 +83,7 @@ public class BamUser {
 		super();
 	}
 
-	public BamUser(String fName, String mName, String lName, String email, String pwd, int role,
+	public BamUser(String fName, String mName, String lName, String email, String pwd, Role role,
 			Batch batch, String phone, String phone2, String skype, String pwd2) {//NOSONAR
 		super();
 		this.fName = fName;
@@ -97,7 +99,7 @@ public class BamUser {
 		this.pwd2 = pwd2;
 	}
 
-	public BamUser(int userId, String fName, String mName, String lName, String email, String pwd, int role,
+	public BamUser(int userId, String fName, String mName, String lName, String email, String pwd, Role role,
 			Batch batch, String phone, String phone2, String skype, String pwd2) {//NOSONAR
 		super();
 		this.fName = fName;
@@ -114,7 +116,7 @@ public class BamUser {
 		this.pwd2 = pwd2;
 	}
 
-	public BamUser(int userId, String fName, String mName, String lName, String email, String pwd, int role,
+	public BamUser(int userId, String fName, String mName, String lName, String email, String pwd, Role role,
 			Batch batch, String phone, String phone2, String skype, String pwd2, Integer AssignForceID) {//NOSONAR
 		super();
 		this.userId = userId;
@@ -180,11 +182,11 @@ public class BamUser {
 		this.pwd = pwd;
 	}
 
-	public int getRole() {
+	public Role getRole() {
 		return role;
 	}
 
-	public void setRole(int role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 
