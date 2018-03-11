@@ -21,7 +21,7 @@ public class BamUserService {
 	BamUserRepository bamUserRepository;
 	
 	// save the user to the database
-	// if the user exists: update the user's information
+	// if the user exists, update the user's information
 	public void addOrUpdateUser(BamUser user) {
 		bamUserRepository.save(user);
 	}
@@ -61,7 +61,7 @@ public class BamUserService {
 		List<BamUser> users = bamUserRepository.findByBatch(null);
 		for (int i = 0; i < users.size(); i++) {
 			// remove a user if their role is not an associate
-			if (users.get(i).getRole() != 1) {
+			if (users.get(i).getRole().getName().equals("Associate")) {
 				users.remove(i);
 				i--;
 			}
