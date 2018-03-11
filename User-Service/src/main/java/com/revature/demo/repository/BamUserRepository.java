@@ -3,7 +3,7 @@ package com.revature.demo.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.revature.demo.beans.BamUser;
 import com.revature.demo.pojo.Batch;
@@ -12,7 +12,7 @@ import com.revature.demo.pojo.Batch;
  * Author: Devin Dellamano
  * Purpose: Methods used to talk to the repository
  */
-@Repository
+@RepositoryRestResource
 public interface BamUserRepository extends JpaRepository<BamUser, Integer> {
 	// grab a single user by id
 	public BamUser findByUserId(int id);

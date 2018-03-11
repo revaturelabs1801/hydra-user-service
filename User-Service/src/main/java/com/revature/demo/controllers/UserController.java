@@ -4,15 +4,19 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.revature.demo.beans.BamUser;
 import com.revature.demo.beans.Role;
 import com.revature.demo.exception.CustomException;
+import com.revature.demo.pojo.Batch;
 import com.revature.demo.service.BamUserService;
 import com.revature.demo.service.RoleService;
 
@@ -25,11 +29,21 @@ public class UserController {
 	private static final String BATCHID = "batchId";
 
 	@Autowired
+	private RestTemplate restTemplate;
+	
+	@Autowired
 	BamUserService userService;
 	
 	@Autowired
 	RoleService roleService;
 
+//TODO: Change this to work with the batch service
+	@GetMapping("/batch/{id}")
+	public Batch getBatch(@PathVariable Long id){
+		Batch batch = restTemplate.getForObject("http://batch-service/"+id, Batch.class);
+		return batch;
+	}
+	
 	@RequestMapping(value = "All", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<BamUser> getAllUsers() {
@@ -57,7 +71,10 @@ public class UserController {
 	
 	@RequestMapping(value="Register", method=RequestMethod.POST, produces="application/json")
 	public void addUser(@RequestBody BamUser currentUser) throws CustomException {
+		System.out.println("in regi");
+		System.out.println(currentUser);
 		if(userService.findUserByEmail(currentUser.getEmail())==null){
+
 			Role role = roleService.findByRoleId(1);
 			currentUser.setRole(role);
 			String password = currentUser.getPwd();
