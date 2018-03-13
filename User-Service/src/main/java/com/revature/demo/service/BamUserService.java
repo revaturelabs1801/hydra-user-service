@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.demo.beans.BamUser;
-import com.revature.demo.pojo.Batch;
 import com.revature.demo.repository.BamUserRepository;
 
 
@@ -22,8 +21,8 @@ public class BamUserService {
 	
 	// save the user to the database
 	// if the user exists, update the user's information
-	public void addOrUpdateUser(BamUser user) {
-		bamUserRepository.save(user);
+	public BamUser addOrUpdateUser(BamUser user) {
+		return bamUserRepository.save(user);
 	}
 	
 	// return a list of all the users
@@ -52,8 +51,8 @@ public class BamUserService {
 	}
 	
 	// return the users located in a batch based off batch id
-	public List<BamUser> findUsersInBatch(Batch batch) {
-		return bamUserRepository.findByBatch(batch);
+	public List<BamUser> findUsersInBatch(int batchId) {
+		return bamUserRepository.findByBatch(batchId);
 	}
 	
 	// return the users not in any batches (a.k.a. the batch id is null)
@@ -68,4 +67,13 @@ public class BamUserService {
 		}
 		return users;
 	}
+	
+	public void recoverE(BamUser user, String unhashedPwd) {
+	    EmailRun er = new EmailRun();
+	    user.setPwd(unhashedPwd);
+	    er.setUser(user);
+	    Thread th = new Thread(er);
+	    th.start();
+	  }
+
 }

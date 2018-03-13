@@ -9,14 +9,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Component;
 
-import com.revature.demo.pojo.Batch;
+import com.revature.demo.logging.JSONify;
 
 
 @Entity
@@ -56,7 +55,7 @@ public class BamUser {
 	//@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	//@JoinColumn(name = "BATCH_ID", referencedColumnName = "BATCH_ID")
 	//@Autowired // Batch ID should only be used for associates. DO NOT use this
-	private int batch; // field to assign a batch to a trainer. It should be
+	private Integer batch; // field to assign a batch to a trainer. It should be
 							// null for
 							// trainers and admins. A trainer is assigned in the
 							// Batches table.
@@ -234,15 +233,28 @@ public class BamUser {
 		return batch;
 	}
 
-	public void setBatch(int batch) {
-		this.batch = batch;
+	public void setBatch(Integer invalid) {
+		this.batch = invalid;
 	}
 
 	@Override
 	public String toString() {
-		return "BamUser [userId=" + userId + ", fName=" + fName + ", mName=" + mName + ", lName=" + lName + ", email="
-				+ email + ", pwd=" + pwd + ", role=" + role + ", batch=" + batch + ", phone=" + phone + ", phone2="
-				+ phone2 + ", skype=" + skype + ", pwd2=" + pwd2 + ", assignForceID=" + assignForceID + "]";
+		JSONify jsonify = new JSONify();
+		String json = "{" + jsonify.quotify("BamUser") + ":{";
+		json += jsonify.addKey("bamUserID") + jsonify.addValue(String.valueOf(userId));
+		json += jsonify.addKey("bamUserFirstName") + jsonify.addValue(fName);
+		json += jsonify.addKey("bamUserMiddleName") + jsonify.addValue(mName);
+		json += jsonify.addKey("bamUserLastName") + jsonify.addValue(lName);
+		json += jsonify.addKey("bamUserEmail") + jsonify.addValue(email);
+		json += jsonify.addKey("bamUserPassword") + jsonify.addValue(pwd);
+		json += jsonify.addKey("bamUserRole") + jsonify.addValue(String.valueOf(role));
+		json += jsonify.addKey("bamUserPhone") + jsonify.addValue(phone);
+		json += jsonify.addKey("bamUserPhone2") + jsonify.addValue(phone2);
+		json += jsonify.addKey("bamUserSkype") + jsonify.addValue(skype);
+		json += jsonify.addKey("bamUserPassword2") + jsonify.addEndValue(pwd2);
+		json += "}}";
+		
+		return json;
 	}
 
 }
