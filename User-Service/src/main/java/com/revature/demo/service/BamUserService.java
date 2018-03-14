@@ -60,7 +60,7 @@ public class BamUserService {
 		List<BamUser> users = bamUserRepository.findByBatch(null);
 		for (int i = 0; i < users.size(); i++) {
 			// remove a user if their role is not an associate
-			if (users.get(i).getRole().getName().equals("Associate")) {
+			if (users.get(i).getRole().ordinal() != 1) {
 				users.remove(i);
 				i--;
 			}
@@ -68,12 +68,6 @@ public class BamUserService {
 		return users;
 	}
 	
-	public void recoverE(BamUser user, String unhashedPwd) {
-	    EmailRun er = new EmailRun();
-	    user.setPwd(unhashedPwd);
-	    er.setUser(user);
-	    Thread th = new Thread(er);
-	    th.start();
-	  }
+
 
 }
