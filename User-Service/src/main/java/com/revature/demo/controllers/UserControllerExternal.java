@@ -25,9 +25,9 @@ import com.revature.demo.service.PasswordGenerator;
 import com.revature.demo.service.RoleService;
 
 @RestController
-@RequestMapping("users/")
+@RequestMapping("/api/v2/users/")
 @CrossOrigin
-public class UserController {
+public class UserControllerExternal {
 
 	@Autowired
 	BamUserService userService;
@@ -203,28 +203,6 @@ public class UserController {
 			return new ResponseEntity<List<BamUser>>(newBatchList, HttpStatus.BAD_REQUEST);
 		}
 	}
-
-//	/**
-//	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method adds users to the batch
-//	 * 
-//	 * @param int
-//	 *            USERID, int BATCHID
-//	 * @return List<BamUser>
-//	 */
-//	@PostMapping("add/{userId}/{batchId}")
-//	public ResponseEntity<List<BamUser>> addUserToBatch(@PathVariable int userId, @PathVariable int batchId) {
-//
-//		BamUser user = userService.findUserById(userId);
-//		user.setBatch(batchService.getBatchById(batchId));
-//
-//		BamUser addedUser = userService.addOrUpdateUser(user);
-//
-//		if (addedUser != null) {
-//			return new ResponseEntity<List<BamUser>>(userService.findUsersNotInBatch(), HttpStatus.OK);
-//		} else {
-//			return new ResponseEntity<List<BamUser>>(userService.findUsersNotInBatch(), HttpStatus.BAD_REQUEST);
-//		}
-//	}
 
 	/**
 	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method returns users not in
