@@ -3,11 +3,11 @@ package com.revature.demo.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.revature.demo.beans.BamUser;
 
-@Repository
+@RepositoryRestResource	
 public interface BamUserRepository extends JpaRepository<BamUser, Integer>{
 	public BamUser findByUserId(int id);
 	public BamUser findByEmail(String email);

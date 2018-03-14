@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>bam</name>
-	<description>BAM Phoniex Reborn</description>
+	<description>BAM Phoenix Reborn</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -23,14 +23,9 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 	</properties>
-	<!--
-	<repositories>
-		<repository>
-			<id>splunk-artifactory</id>
-			<name>Splunk Releases</name>
-			<url>http://splunk.artifactoryonline.com/splunk/ext-releases-local</url>
-		</repository>
-	</repositories> -->
+	<!-- <repositories> <repository> <id>splunk-artifactory</id> <name>Splunk 
+		Releases</name> <url>http://splunk.artifactoryonline.com/splunk/ext-releases-local</url> 
+		</repository> </repositories> -->
 
 
 	<dependencies>
@@ -76,35 +71,47 @@
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
 		</dependency>
- 		<dependency>
+		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc7</artifactId>
 			<version>12.1.0</version>
 		</dependency>
-		
+
 		<!-- Add Log4j2 Dependency -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
-        </dependency>
-        <!-- Needed for Async Logging with Log4j 2 -->
-        <dependency>
-            <groupId>com.lmax</groupId>
-            <artifactId>disruptor</artifactId>
-            <version>3.3.6</version>
-        </dependency>
-        <!-- Exclude Spring Boot's Default Logging -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+		<!-- Needed for Async Logging with Log4j 2 -->
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>3.3.6</version>
+		</dependency>
+		<!-- Exclude Spring Boot's Default Logging -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-config -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+			<version>1.4.2.RELEASE</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-rest-webmvc -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-webmvc</artifactId>
+			<version>3.0.5.RELEASE</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -113,9 +120,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-				<!-- This allows linux ec2 to execute as a service. -->
- 				<executable>true</executable>
- 			</configuration>
+					<!-- This allows linux ec2 to execute as a service. -->
+					<executable>true</executable>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

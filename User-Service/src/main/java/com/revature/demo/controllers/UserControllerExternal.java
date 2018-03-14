@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.demo.beans.BamUser;
 import com.revature.demo.beans.Role;
+import com.revature.demo.exception.AuthUserException;
 import com.revature.demo.service.BamUserService;
 import com.revature.demo.service.PasswordGenerator;
 import com.revature.demo.service.RoleService;
@@ -35,52 +36,6 @@ public class UserControllerExternal {
 	@Autowired
 	RoleService roleService;
 
-	@GetMapping("all")
-	public ResponseEntity<List<BamUser>> getAllUsers() {
-		List<BamUser> allUsers = userService.findAllUsers();
-
-		return new ResponseEntity<List<BamUser>>(allUsers, HttpStatus.OK);
-	}
-
-	/**
-	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method gets all trainers
-	 * @return List<BamUser> : all trainers
-	 */
-	@GetMapping("alltrainers")
-	public ResponseEntity<List<BamUser>> getAllTrainers() {
-		List<BamUser> allTrainers = userService.findByRole(2);
-
-		return new ResponseEntity<List<BamUser>>(allTrainers, HttpStatus.OK);
-	}
-
-	/**
-	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method gets all associates
-	 * @return List<BamUser> : all associates
-	 */
-	@GetMapping("allassociates")
-	public ResponseEntity<List<BamUser>> getAllAssociates() {
-		List<BamUser> allAssociates = userService.findByRole(1);
-
-		return new ResponseEntity<List<BamUser>>(allAssociates, HttpStatus.OK);
-	}
-
-	/**
-	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method gets all users in batch
-	 * @param int
-	 *            BATCHID
-	 * @return List<BamUser> : users in batch
-	 * @throws IOException
-	 * @throws ServletException
-	 */
-	@GetMapping("inbatch/{batchId}")
-	public ResponseEntity<List<BamUser>> getUsersInBatch(@PathVariable int batchId) {
-
-		// Retrieve and return users in a batch from the database
-		List<BamUser> usersInBatch = userService.findUsersInBatch(batchId);
-
-		return new ResponseEntity<List<BamUser>>(usersInBatch, HttpStatus.OK);
-	}
-
 	/**
 	 * @author Jeffrey Camacho 1712-dec10-java-Steve Removes user from batch then
 	 *         returns user with updated batch. "0" role does not exist in the
@@ -93,7 +48,7 @@ public class UserControllerExternal {
 	 * @throws ServletException
 	 */
 	@PostMapping("drop/{userId}")
-	public ResponseEntity<List<BamUser>> dropUserFromBatch(@PathVariable int userId) {
+	public List<BamUser> dropUserFromBatch(@PathVariable int userId) {
 
 		BamUser user = userService.findUserById(userId);
 		int batchId = user.getBatch();
@@ -105,9 +60,7 @@ public class UserControllerExternal {
 		userService.addOrUpdateUser(user);
 
 		// Return users from batch without the user
-		List<BamUser> usersInBatch = userService.findUsersInBatch(batchId);
-
-		return new ResponseEntity<List<BamUser>>(usersInBatch, HttpStatus.OK);
+		return userService.findUsersInBatch(batchId);
 	}
 
 	/**
@@ -115,17 +68,18 @@ public class UserControllerExternal {
 	 * 
 	 * @param currentUser
 	 * @return BamUser
+	 * @throws AuthUserException 
 	 */
 	@PostMapping("update")
-	public ResponseEntity<BamUser> updateUser(@RequestBody BamUser currentUser) {
+	public BamUser updateUser(@RequestBody BamUser currentUser) throws AuthUserException {
 		BamUser user = userService.findUserByEmail(currentUser.getEmail());
 		currentUser.setPwd(user.getPwd());
 
 		BamUser updatedUser = userService.addOrUpdateUser(currentUser);
 		if (updatedUser != null) {
-			return new ResponseEntity<BamUser>(updatedUser, HttpStatus.CREATED);
+			return updatedUser;
 		} else {
-			return new ResponseEntity<BamUser>(updatedUser, HttpStatus.BAD_REQUEST);
+			throw new AuthUserException("User not updated/available", HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -135,9 +89,10 @@ public class UserControllerExternal {
 	 * 
 	 * @param currentUser
 	 * @return BamUser
+	 * @throws AuthUserException 
 	 */
 	@PostMapping("register")
-	public ResponseEntity<BamUser> addUser(@RequestBody BamUser currentUser) {
+	public BamUser addUser(@RequestBody BamUser currentUser) throws AuthUserException {
 		BamUser addedUser = null;
 		if (userService.findUserByEmail(currentUser.getEmail()) == null) {
 			Role role = roleService.findByRoleId(1);
@@ -145,11 +100,10 @@ public class UserControllerExternal {
 			String password = currentUser.getPwd();
 			String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 			currentUser.setPwd(hashed);
-			addedUser = userService.addOrUpdateUser(currentUser);
-			return new ResponseEntity<BamUser>(addedUser, HttpStatus.CREATED);
+			return userService.addOrUpdateUser(currentUser);
 		} else {
+			throw new AuthUserException("User not added", HttpStatus.BAD_REQUEST);
 			// throw new CustomException("Email exists in database");
-			return new ResponseEntity<BamUser>(addedUser, HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -160,18 +114,18 @@ public class UserControllerExternal {
 	 * @param BamUser
 	 *            userNewPass
 	 * @return BamUser
+	 * @throws AuthUserException 
 	 */
 	@PostMapping("reset")
-	public ResponseEntity<BamUser> resetPassword(@RequestBody BamUser userNewPass) {
+	public BamUser resetPassword(@RequestBody BamUser userNewPass) throws AuthUserException {
 		BamUser updatedUser = null;
 		BamUser currentUser = userService.findUserByEmail(userNewPass.getEmail());
 		if (BCrypt.checkpw(userNewPass.getPwd(), currentUser.getPwd())) {
 			String hashed = BCrypt.hashpw(userNewPass.getPwd2(), BCrypt.gensalt());
 			currentUser.setPwd(hashed);
-			updatedUser = userService.addOrUpdateUser(currentUser);
-			return new ResponseEntity<BamUser>(updatedUser, HttpStatus.OK);
+			return userService.addOrUpdateUser(currentUser);
 		} else {
-			return new ResponseEntity<BamUser>(updatedUser, HttpStatus.BAD_REQUEST);
+			throw new AuthUserException("Password not reset/available", HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -182,11 +136,12 @@ public class UserControllerExternal {
 	 * @param int
 	 *            USERID
 	 * @return List<BamUser>
+	 * @throws AuthUserException 
 	 * @throws IOException
 	 * @throws ServletException
 	 */
 	@PostMapping("remove/{userId}")
-	public ResponseEntity<List<BamUser>> removeUser(@PathVariable int userId) {
+	public List<BamUser> removeUser(@PathVariable int userId) throws AuthUserException {
 
 		BamUser user = userService.findUserById(userId);
 		int batchId = user.getBatch();
@@ -198,33 +153,45 @@ public class UserControllerExternal {
 		// Return users from batch without the user
 		List<BamUser> newBatchList = userService.findUsersInBatch(batchId);
 		if (newBatchList != null) {
-			return new ResponseEntity<List<BamUser>>(newBatchList, HttpStatus.OK);
+			return newBatchList;
 		} else {
-			return new ResponseEntity<List<BamUser>>(newBatchList, HttpStatus.BAD_REQUEST);
+			throw new AuthUserException("User not removed/available", HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	/**
-	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method returns users not in
-	 *         batch
+	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method adds users to the batch
 	 * 
-	 * @param
+	 * @param int
+	 *            USERID, int BATCHID
 	 * @return List<BamUser>
+	 * @throws AuthUserException 
 	 */
-	@GetMapping("notinabatch")
-	public ResponseEntity<List<BamUser>> getUsersNotInBatch() {
-		List<BamUser> usersNotInBatch = userService.findUsersNotInBatch();
-		return new ResponseEntity<List<BamUser>>(usersNotInBatch, HttpStatus.OK);
+	@PostMapping("addUserToBatch/{userId}/{batchId}")
+	public List<BamUser> addUserToBatch(@PathVariable int userId, @PathVariable int batchId) throws AuthUserException {
+
+		BamUser user = userService.findUserById(userId);
+		user.setBatch(batchId);
+
+		BamUser addedUser = userService.addOrUpdateUser(user);
+
+		if (addedUser != null) {
+			return userService.findUsersNotInBatch();
+		} else {
+			throw new AuthUserException("User not added/available", HttpStatus.BAD_REQUEST);
+		}
 	}
+
 
 	/**
 	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method resets the password
 	 * 
 	 * @param email
 	 * @return BamUser
+	 * @throws AuthUserException 
 	 */
 	@PostMapping("recovery")
-	public ResponseEntity<BamUser> recoverPassword(@RequestParam String email) {
+	public BamUser recoverPassword(@RequestParam String email) throws AuthUserException {
 		// Lookup user in database by e-mail
 		BamUser user = userService.findUserByEmail(email);
 		if (user != null) {
@@ -233,9 +200,9 @@ public class UserControllerExternal {
 			user.setPwd(hashed);
 			userService.addOrUpdateUser(user);
 			userService.recoverE(user, generate);
-			return new ResponseEntity<BamUser>(user, HttpStatus.ACCEPTED);
+			return user;
 		} else {
-			return new ResponseEntity<BamUser>(user, HttpStatus.BAD_REQUEST);
+			throw new AuthUserException("User not added", HttpStatus.BAD_REQUEST);
 		}
 	}
 

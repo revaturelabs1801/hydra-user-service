@@ -8,21 +8,15 @@ import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.demo.beans.BamUser;
-import com.revature.demo.beans.Role;
 import com.revature.demo.service.BamUserService;
-import com.revature.demo.service.PasswordGenerator;
-import com.revature.demo.service.RoleService;
 
 @RestController
 @RequestMapping("user-service/")
@@ -31,28 +25,55 @@ public class UserControllerInternal {
 
 	@Autowired
 	BamUserService userService;
+	
 
 	/**
-	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method adds users to the batch
+	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method returns users not in
+	 *         batch
 	 * 
-	 * @param int
-	 *            USERID, int BATCHID
+	 * @param
 	 * @return List<BamUser>
 	 */
-	@PostMapping("add/{userId}/{batchId}")
-	public ResponseEntity<List<BamUser>> addUserToBatch(@PathVariable int userId, @PathVariable int batchId) {
-
-		BamUser user = userService.findUserById(userId);
-		//user.setBatch(batchService.getBatchById(batchId));
-
-		BamUser addedUser = userService.addOrUpdateUser(user);
-
-		if (addedUser != null) {
-			return new ResponseEntity<List<BamUser>>(userService.findUsersNotInBatch(), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<List<BamUser>>(userService.findUsersNotInBatch(), HttpStatus.BAD_REQUEST);
-		}
+	@GetMapping("notinabatch")
+	public List<BamUser> getUsersNotInBatch() {
+		return userService.findUsersNotInBatch();
 	}
 
+	@GetMapping("all")
+	public List<BamUser> getAllUsers() {
+		return userService.findAllUsers();
+	}
+
+	/**
+	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method gets all trainers
+	 * @return List<BamUser> : all trainers
+	 */
+	@GetMapping("alltrainers")
+	public List<BamUser> getAllTrainers() {
+		return userService.findByRole(2);
+	}
+
+	/**
+	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method gets all associates
+	 * @return List<BamUser> : all associates
+	 */
+	@GetMapping("allassociates")
+	public List<BamUser> getAllAssociates() {
+		return userService.findByRole(1);
+	}
+
+	/**
+	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method gets all users in batch
+	 * @param int
+	 *            BATCHID
+	 * @return List<BamUser> : users in batch
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	@GetMapping("inbatch/{batchId}")
+	public List<BamUser> getUsersInBatch(@PathVariable int batchId) {
+		// Retrieve and return users in a batch from the database
+		return userService.findUsersInBatch(batchId);
+	}
 
 }
