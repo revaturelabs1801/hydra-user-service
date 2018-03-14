@@ -15,8 +15,6 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Component;
 
-import com.revature.demo.logging.JSONify;
-
 
 @Entity
 @Table(name = "USERS")
@@ -47,9 +45,8 @@ public class BamUser {
 	@Column(name = "Password")
 	@NotNull(message="Password cannot be empty")
 	private String pwd;
-	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "ROLE_ID", referencedColumnName = "Role_Id")
+
+	@Column(name = "Role")
 	private Role role;
 	
 	//@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -82,7 +79,7 @@ public class BamUser {
 		super();
 	}
 
-	public BamUser(String fName, String mName, String lName, String email, String pwd, Role role,
+	public BamUser(String fName, String mName, String lName, String email, String pwd, Role	 role,
 			int batch, String phone, String phone2, String skype, String pwd2) {//NOSONAR
 		super();
 		this.fName = fName;
@@ -185,8 +182,8 @@ public class BamUser {
 		return role;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setRole(Role i) {
+		this.role = i;
 	}
 
 	public String getPhone() {
@@ -236,25 +233,4 @@ public class BamUser {
 	public void setBatch(Integer invalid) {
 		this.batch = invalid;
 	}
-
-	@Override
-	public String toString() {
-		JSONify jsonify = new JSONify();
-		String json = "{" + jsonify.quotify("BamUser") + ":{";
-		json += jsonify.addKey("bamUserID") + jsonify.addValue(String.valueOf(userId));
-		json += jsonify.addKey("bamUserFirstName") + jsonify.addValue(fName);
-		json += jsonify.addKey("bamUserMiddleName") + jsonify.addValue(mName);
-		json += jsonify.addKey("bamUserLastName") + jsonify.addValue(lName);
-		json += jsonify.addKey("bamUserEmail") + jsonify.addValue(email);
-		json += jsonify.addKey("bamUserPassword") + jsonify.addValue(pwd);
-		json += jsonify.addKey("bamUserRole") + jsonify.addValue(String.valueOf(role));
-		json += jsonify.addKey("bamUserPhone") + jsonify.addValue(phone);
-		json += jsonify.addKey("bamUserPhone2") + jsonify.addValue(phone2);
-		json += jsonify.addKey("bamUserSkype") + jsonify.addValue(skype);
-		json += jsonify.addKey("bamUserPassword2") + jsonify.addEndValue(pwd2);
-		json += "}}";
-		
-		return json;
-	}
-
 }

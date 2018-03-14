@@ -3,27 +3,25 @@ package com.revature.demo.controllers;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+// import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.demo.beans.BamUser;
 import com.revature.demo.beans.Role;
 import com.revature.demo.exception.AuthUserException;
 import com.revature.demo.service.BamUserService;
-import com.revature.demo.service.PasswordGenerator;
-import com.revature.demo.service.RoleService;
 
 @RestController
 @RequestMapping("/api/v2/users/")
@@ -33,9 +31,8 @@ public class UserControllerExternal {
 	@Autowired
 	BamUserService userService;
 
-	@Autowired
-	RoleService roleService;
-
+	@Resource
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 	/**
 	 * @author Jeffrey Camacho 1712-dec10-java-Steve Removes user from batch then
 	 *         returns user with updated batch. "0" role does not exist in the
@@ -54,9 +51,8 @@ public class UserControllerExternal {
 		int batchId = user.getBatch();
 
 		// Drop user from the batch
-		Role role = roleService.findByRoleId(0);
 		user.setBatch(null);
-		user.setRole(role);// 0 role does not exist in database, use 1 to test method checks good.
+		user.setRole(Role.NONE);// 0 role does not exist in database, use 1 to test method checks good.
 		userService.addOrUpdateUser(user);
 
 		// Return users from batch without the user
@@ -95,10 +91,9 @@ public class UserControllerExternal {
 	public BamUser addUser(@RequestBody BamUser currentUser) throws AuthUserException {
 		BamUser addedUser = null;
 		if (userService.findUserByEmail(currentUser.getEmail()) == null) {
-			Role role = roleService.findByRoleId(1);
-			currentUser.setRole(role);
+			currentUser.setRole(Role.ASSOCIATE);
 			String password = currentUser.getPwd();
-			String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+			String hashed = this.bCryptPasswordEncoder.encode(password);
 			currentUser.setPwd(hashed);
 			return userService.addOrUpdateUser(currentUser);
 		} else {
@@ -116,18 +111,18 @@ public class UserControllerExternal {
 	 * @return BamUser
 	 * @throws AuthUserException 
 	 */
-	@PostMapping("reset")
-	public BamUser resetPassword(@RequestBody BamUser userNewPass) throws AuthUserException {
-		BamUser updatedUser = null;
-		BamUser currentUser = userService.findUserByEmail(userNewPass.getEmail());
-		if (BCrypt.checkpw(userNewPass.getPwd(), currentUser.getPwd())) {
-			String hashed = BCrypt.hashpw(userNewPass.getPwd2(), BCrypt.gensalt());
-			currentUser.setPwd(hashed);
-			return userService.addOrUpdateUser(currentUser);
-		} else {
-			throw new AuthUserException("Password not reset/available", HttpStatus.BAD_REQUEST);
-		}
-	}
+//	@PostMapping("reset")
+//	public BamUser resetPassword(@RequestBody BamUser userNewPass) throws AuthUserException {
+//		BamUser updatedUser = null;
+//		BamUser currentUser = userService.findUserByEmail(userNewPass.getEmail());
+//		if (BCrypt.checkpw(userNewPass.getPwd(), currentUser.getPwd())) {
+//			String hashed = BCrypt.hashpw(userNewPass.getPwd2(), BCrypt.gensalt());
+//			currentUser.setPwd(hashed);
+//			return userService.addOrUpdateUser(currentUser);
+//		} else {
+//			throw new AuthUserException("Password not reset/available", HttpStatus.BAD_REQUEST);
+//		}
+//	}
 
 	/**
 	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method removes user and returns
@@ -190,20 +185,20 @@ public class UserControllerExternal {
 	 * @return BamUser
 	 * @throws AuthUserException 
 	 */
-	@PostMapping("recovery")
-	public BamUser recoverPassword(@RequestParam String email) throws AuthUserException {
-		// Lookup user in database by e-mail
-		BamUser user = userService.findUserByEmail(email);
-		if (user != null) {
-			String generate = PasswordGenerator.makePassword();
-			String hashed = BCrypt.hashpw(generate, BCrypt.gensalt());
-			user.setPwd(hashed);
-			userService.addOrUpdateUser(user);
-			userService.recoverE(user, generate);
-			return user;
-		} else {
-			throw new AuthUserException("User not added", HttpStatus.BAD_REQUEST);
-		}
-	}
+//	@PostMapping("recovery")
+//	public BamUser recoverPassword(@RequestParam String email) throws AuthUserException {
+//		// Lookup user in database by e-mail
+//		BamUser user = userService.findUserByEmail(email);
+//		if (user != null) {
+//			String generate = PasswordGenerator.makePassword();
+//			String hashed = BCrypt.hashpw(generate, BCrypt.gensalt());
+//			user.setPwd(hashed);
+//			userService.addOrUpdateUser(user);
+//			userService.recoverE(user, generate);
+//			return user;
+//		} else {
+//			throw new AuthUserException("User not added", HttpStatus.BAD_REQUEST);
+//		}
+//	}
 
 }
