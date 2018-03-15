@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.demo.beans.BamUser;
+import com.revature.demo.exception.AuthUserException;
 import com.revature.demo.service.BamUserService;
 
 @RestController
@@ -74,6 +76,37 @@ public class UserControllerInternal {
 	public List<BamUser> getUsersInBatch(@PathVariable int batchId) {
 		// Retrieve and return users in a batch from the database
 		return userService.findUsersInBatch(batchId);
+	}
+	/**
+	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method returns users not in
+	 *         batch
+	 * 
+	 * @param
+	 * @return List<BamUser>
+	 */
+	@GetMapping("byEmail/{email}")
+	public BamUser getUsersByEmail(@PathVariable String email) {
+		BamUser user = userService.findUserByEmail(email);
+		return user;
+	}
+	/**
+	 * @author Jeffrey Camacho 1712-dec10-java-Steve Updates the current user
+	 * 
+	 * @param currentUser
+	 * @return BamUser
+	 * @throws AuthUserException 
+	 */
+	@PostMapping("update")
+	public BamUser updateUser(@RequestBody BamUser currentUser) throws AuthUserException {
+		BamUser user = userService.findUserByEmail(currentUser.getEmail());
+		currentUser.setPwd(user.getPwd());
+
+		BamUser updatedUser = userService.addOrUpdateUser(currentUser);
+		if (updatedUser != null) {
+			return updatedUser;
+		} else {
+			throw new AuthUserException("User not updated/available", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

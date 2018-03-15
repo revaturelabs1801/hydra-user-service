@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Entity
 @Table(name = "USERS")
-@Component
+//@Component
 public class BamUser {
 
 	@Id
@@ -38,7 +38,7 @@ public class BamUser {
 	@NotNull(message = "Last name cannot be empty")
 	private String lName;
 
-	@Column(name = "eMail")
+	@Column(name = "EMail")
 	@NotNull(message = "e-mail address cannot be empty")
 	private String email;
 
