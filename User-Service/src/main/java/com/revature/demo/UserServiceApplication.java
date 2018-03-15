@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableScheduling
 @ComponentScan("com.revature.demo")
+//@EnableEurekaClient
 @SpringBootApplication
 public class UserServiceApplication {
 
