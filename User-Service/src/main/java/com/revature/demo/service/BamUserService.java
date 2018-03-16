@@ -19,6 +19,10 @@ public class BamUserService {
 	@Autowired
 	BamUserRepository bamUserRepository;
 	
+	public BamUserService(BamUserRepository bamUserRepository){
+		this.bamUserRepository = bamUserRepository;
+	}
+	
 	// save the user to the database
 	// if the user exists, update the user's information
 	public BamUser addOrUpdateUser(BamUser user) {
