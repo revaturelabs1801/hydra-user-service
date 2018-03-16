@@ -24,7 +24,7 @@ import com.revature.demo.exception.AuthUserException;
 import com.revature.demo.service.BamUserService;
 
 @RestController
-@RequestMapping("/api/v2/users/")
+@RequestMapping("/api/v2/user/")
 @CrossOrigin
 public class UserControllerExternal {
 
