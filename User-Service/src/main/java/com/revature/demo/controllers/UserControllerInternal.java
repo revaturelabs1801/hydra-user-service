@@ -100,7 +100,7 @@ public class UserControllerInternal {
 	@PostMapping("update")
 	public BamUser updateUser(@RequestBody BamUser currentUser) throws AuthUserException {
 		BamUser user = userService.findUserByEmail(currentUser.getEmail());
-		currentUser.setPwd(user.getPwd());
+		currentUser.setUserId(user.getUserId());
 
 		BamUser updatedUser = userService.addOrUpdateUser(currentUser);
 		if (updatedUser != null) {

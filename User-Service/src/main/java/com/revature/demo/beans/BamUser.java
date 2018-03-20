@@ -38,7 +38,7 @@ public class BamUser {
 	@NotNull(message = "Last name cannot be empty")
 	private String lName;
 
-	@Column(name = "EMail")
+	@Column(name = "EMail", unique = true)
 	@NotNull(message = "e-mail address cannot be empty")
 	private String email;
 

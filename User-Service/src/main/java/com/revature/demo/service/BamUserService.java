@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.demo.beans.BamUser;
 import com.revature.demo.beans.Role;
@@ -26,6 +27,7 @@ public class BamUserService {
 	
 	// save the user to the database
 	// if the user exists, update the user's information
+	@Transactional
 	public BamUser addOrUpdateUser(BamUser user) {
 		return bamUserRepository.save(user);
 	}
