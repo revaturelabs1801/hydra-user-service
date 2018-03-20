@@ -184,8 +184,8 @@ public class UserControllerExternal {
 	 * @param
 	 * @return BamUser
 	 */
-	@GetMapping("{id}")
-	public BamUser getUsersById(@PathVariable int id) {
+	@GetMapping("getById/{id}")
+	public BamUser getUsersById(@PathVariable Integer id) {
 		BamUser user = userService.findUserById(id);
 		return user;
 	}
