@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.demo.beans.BamUser;
+import com.revature.demo.beans.Role;
 import com.revature.demo.exception.AuthUserException;
 import com.revature.demo.service.BamUserService;
 
@@ -52,7 +53,7 @@ public class UserControllerInternal {
 	 */
 	@GetMapping("alltrainers")
 	public List<BamUser> getAllTrainers() {
-		return userService.findByRole(2);
+		return userService.findByRole(Role.TRAINER);
 	}
 
 	/**
@@ -61,7 +62,7 @@ public class UserControllerInternal {
 	 */
 	@GetMapping("allassociates")
 	public List<BamUser> getAllAssociates() {
-		return userService.findByRole(1);
+		return userService.findByRole(Role.ASSOCIATE);
 	}
 
 	/**

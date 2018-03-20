@@ -77,7 +77,7 @@ public class UserTests {
 		mockUser = bamService.addOrUpdateUser(bam);
 		
 		//Verify
-		assertNotNull(bamService.findByRole(2));//2 is Trainer
+		assertNotNull(bamService.findByRole(Role.TRAINER));//2 is Trainer
 	}
 	
 	@Test
@@ -94,7 +94,7 @@ public class UserTests {
 	public void testInternalControllerFindTrainers() {
 		
 		//Setup
-		List<BamUser> trainers = bamService.findByRole(2);
+		List<BamUser> trainers = bamService.findByRole(Role.TRAINER);
 		
 		//Verify
 		assertNotNull(trainers);

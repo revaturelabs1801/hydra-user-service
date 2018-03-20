@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.demo.beans.BamUser;
+import com.revature.demo.beans.Role;
 import com.revature.demo.repository.BamUserRepository;
 
 
@@ -35,8 +36,8 @@ public class BamUserService {
 	}
 	
 	// return a list of all the users by a role
-	public List<BamUser> findByRole(int role) {
-		return bamUserRepository.findByRole(role);
+	public List<BamUser> findByRole(Role trainer) {
+		return bamUserRepository.findByRole(trainer);
 	}
 	
 	// return a specific user by id
