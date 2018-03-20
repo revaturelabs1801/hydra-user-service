@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 // import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -177,7 +178,17 @@ public class UserControllerExternal {
 		}
 	}
 
-
+	/**
+	 * @author TJay Cargle 1801-jan8-java
+	 * 
+	 * @param
+	 * @return BamUser
+	 */
+	@GetMapping("{id}")
+	public BamUser getUsersById(@PathVariable int id) {
+		BamUser user = userService.findUserById(id);
+		return user;
+	}
 	/**
 	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method resets the password
 	 * 

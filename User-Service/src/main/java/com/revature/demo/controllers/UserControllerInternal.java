@@ -91,6 +91,17 @@ public class UserControllerInternal {
 		return user;
 	}
 	/**
+	 * @author TJay Cargle 1801-jan8-java
+	 * 
+	 * @param
+	 * @return BamUser
+	 */
+	@GetMapping("{id}")
+	public BamUser getUsersById(@PathVariable int id) {
+		BamUser user = userService.findUserById(id);
+		return user;
+	}
+	/**
 	 * @author Jeffrey Camacho 1712-dec10-java-Steve Updates the current user
 	 * 
 	 * @param currentUser
