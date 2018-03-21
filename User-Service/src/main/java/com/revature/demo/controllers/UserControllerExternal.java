@@ -144,7 +144,7 @@ public class UserControllerExternal {
 		int batchId = user.getBatch();
 
 		// Set the user as inactive
-		user.setBatch(null);
+		user.setBatch(0);
 		userService.addOrUpdateUser(user);
 
 		// Return users from batch without the user
@@ -205,6 +205,20 @@ public class UserControllerExternal {
 		
 		return new ResponseEntity<List<BamUser>>(usersInBatch, HttpStatus.OK);
 	}
+	
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
+	 * Method returns users not in batch
+	 * 
+	 * @param 
+	 * @return List<BamUser>
+	 */
+	@GetMapping("notinabatch")
+	public List<BamUser> getUsersNotInBatch() {
+		List<BamUser> usersNotInBatch = userService.findUsersNotInBatch();
+		return usersNotInBatch;
+	}
+	
+	
 	
 	/**
 	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method resets the password
