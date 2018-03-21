@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 // import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -189,6 +190,22 @@ public class UserControllerExternal {
 		BamUser user = userService.findUserById(id);
 		return user;
 	}
+	/**@author Jeffrey Camacho 1712-dec10-java-Steve
+	 * Method gets all users in batch
+	 * @param int BATCHID
+	 * @return List<BamUser> : users in batch
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	@GetMapping("inbatch/{batchId}")
+	public ResponseEntity<List<BamUser>> getUsersInBatch(@PathVariable int batchId) {
+		
+		//Retrieve and return users in a batch from the database
+		List<BamUser> usersInBatch = userService.findUsersInBatch(batchId);
+		
+		return new ResponseEntity<List<BamUser>>(usersInBatch, HttpStatus.OK);
+	}
+	
 	/**
 	 * @author Jeffrey Camacho 1712-dec10-java-Steve Method resets the password
 	 * 
