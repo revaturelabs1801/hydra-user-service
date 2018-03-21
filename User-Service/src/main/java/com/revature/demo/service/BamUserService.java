@@ -64,7 +64,7 @@ public class BamUserService {
 	
 	// return the users not in any batches (a.k.a. the batch id is null)
 	public List<BamUser> findUsersNotInBatch() {
-		List<BamUser> users = bamUserRepository.findByBatch(null);
+		List<BamUser> users = bamUserRepository.findByBatch(0);
 		for (int i = 0; i < users.size(); i++) {
 			// remove a user if their role is not an associate
 			if (users.get(i).getRole().ordinal() != 1) {
